@@ -1,5 +1,11 @@
-const io = require('socket.io')(3000)
+var express = require("express");
+var app = express();
+var http = require("http").Server(app);
+
+const io = require('socket.io')(http)
 const users = {};
+
+app.use(express.static(__dirname + '/../client'));
 
 
 io.on('connection', socket => {
@@ -16,4 +22,8 @@ io.on('connection', socket => {
       socket.broadcast.emit("user-disconnected", users[socket.id])
       delete users[socket.id]
     });
+});
+
+http.listen(3000, function() {
+  console.log("Server is listening on port 3000");
 });
